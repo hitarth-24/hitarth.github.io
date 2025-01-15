@@ -9,7 +9,7 @@ function loadReadme(fileName) {
         })
         .then(data => {
             // Convert Markdown to HTML using marked.js
-            const htmlContent = marked(data);
+            const htmlContent = marked.parse(data);
             document.getElementById('readmeContent').innerHTML = htmlContent;
         })
         .catch(error => {
@@ -24,4 +24,4 @@ document.getElementById('readmeSelector').addEventListener('change', (event) => 
 });
 
 // Initial load
-loadReadme('README.md');
+loadReadme('readme1.md');
