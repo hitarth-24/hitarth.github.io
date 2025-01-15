@@ -3,31 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Readme Viewer</title>
-    <link rel="stylesheet" href="style.css">
+    <title>README Documentation Viewer</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>README File Viewer</h1>
-        <p>Select a README to view its content:</p>
-        <select id="readmeSelector">
-            <option value="readme1.md">README 1</option>
-            <option value="readme2.md">README 2</option>
-        </select>
-    </header>
-
-    <section>
-        <div id="readmeContent">
-            <p>Select a README from the dropdown above to display its content.</p>
+    <nav class="navbar">
+        <div class="nav-content">
+            <h1 class="nav-title">Documentation Viewer</h1>
         </div>
-    </section>
+    </nav>
 
-    <footer>
-        <p>&copy; 2025 Simple Website. All Rights Reserved.</p>
+    <div class="container">
+        <div class="content-wrapper">
+            <div class="selection-area">
+                <h2>Select Documentation</h2>
+                <div class="select-wrapper">
+                    <select id="readmeSelect" class="custom-select">
+                        <option value="">Choose a README file...</option>
+                        <option value="readme1.md">Project Overview</option>
+                        <option value="readme2.md">Installation Guide</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="readmeContent" class="markdown-content">
+                <div class="initial-message">
+                    <h3>Welcome to Documentation Viewer</h3>
+                    <p>Please select a document from the dropdown above to view its contents.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Documentation Viewer. Hosted on GitHub Pages.</p>
+        </div>
     </footer>
 
-    <!-- Load marked.js via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/marked@4.0.12/lib/marked.min.js"></script>
-    <script src="script.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.2/marked.min.js"></script>
+    
+    <script>
+        document.getElementById('readmeSelect').addEventListener('change', async (e) => {
+            const selectedFile = e.target.value;
+            const readmeContent = document.getElementById('readmeContent');
+            
+            if (!selectedFile) {
+                readmeContent.innerHTML = `
+                    <div class="initial-message">
+                        <h3>Welcome to Documentation Viewer</h3>
+                        <p>Please select a document from the dropdown above to view its contents.</p>
+                    </div>`;
+                readmeContent.classList.remove('active');
+                return;
+            }
+
+            try {
+                const response = await fetch(selectedFile);
+                if (!response.ok) throw new Error('Failed to load file');
+                
+                const content = await response.text();
+                readmeContent.innerHTML = marked.parse(content);
+                readmeContent.classList.add('active');
+            } catch (error) {
+                readmeContent.innerHTML = `
+                    <div class="error-message">
+                        <h3>Error Loading Content</h3>
+                        <p>Failed to load the selected document. Please try again.</p>
+                    </div>`;
+            }
+        });
+    </script>
 </body>
 </html>
