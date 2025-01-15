@@ -24,4 +24,4 @@ document.getElementById('readmeSelector').addEventListener('change', (event) => 
 });
 
 // Initial load
-loadReadme('readme1.md');
+loadReadme('README.md');
